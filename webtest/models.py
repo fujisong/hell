@@ -20,7 +20,7 @@ class Event(models.Model):
 
 #嘉宾表
 class Guest(models.Model):
-    event=models.ForeignKey(Event)
+    event=models.ForeignKey(Event,on_delete=models.CASCADE)
     realname=models.CharField(max_length=64)
     phone=models.CharField(max_length=16)
     email=models.EmailField()
