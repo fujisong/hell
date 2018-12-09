@@ -27,8 +27,8 @@ class Guest(models.Model):
     sign=models.BooleanField()
     create_time=models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.realname
-
 class Meta:
     unique_together=('event','phone')
+
+def __str__(self):
+    return self.realname

@@ -8,7 +8,7 @@ class EventAdmin(admin.ModelAdmin):
     list_filter=['status']  # 过滤
 
 class GuestAdmin(admin.ModelAdmin):
-    list_play=['realname','phone','email','sign','create_time','event']
+    list_display=['realname','phone','email','sign','create_time','event']
     search_fields=['realname','phone']
     list_filter=['sign']
     
