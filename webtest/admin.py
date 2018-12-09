@@ -16,6 +16,3 @@ admin.site.register(Event,EventAdmin)
 admin.site.register(Guest,GuestAdmin)
 
 
-
-
-
