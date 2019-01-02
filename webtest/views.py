@@ -26,5 +26,9 @@ def login_action(request):
 @login_required
 def event_manage(request):
     #realname=request.COOKIES.get('user','')
-    realname=request.session.get('user','')
-    return render(request,"event_manage.html",{'user':realname})
+    #realname=request.session.get('user','')
+    #return render(request,"event_manage.html",{'user':realname})
+    event_list=Event.objects.all()
+    username=request.session.get('user','')
+    return  render(request,'event_manage.html',{'user':username,'events':event_list})
+
