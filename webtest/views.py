@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from webtest.models import Event
+from  webtest.models import Guest
 # Create your views here.
 #登录逻辑
 def index(request):
@@ -40,3 +41,10 @@ def search_name(request):
     search_name=request.GET.get('name','')
     event_list=Event.objects.filter(name__contains=search_name)
     return  render(request,'event_manage.html',{'user':username,'events':event_list})
+
+#guest管理
+@login_required
+def guest_manage(request):
+    username=request.Session.get('user','')
+    guest_list=Guest.objects.all()
+    return render(request,'guest_manage.html',{'user':username,'guests':guest_list})
