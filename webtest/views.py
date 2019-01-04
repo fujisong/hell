@@ -3,8 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from webtest.models import Event
-from  webtest.models import Guest
+from webtest.models import Event,Guest
 # Create your views here.
 #登录逻辑
 def index(request):
@@ -45,6 +44,14 @@ def search_name(request):
 #guest管理
 @login_required
 def guest_manage(request):
-    username=request.Session.get('user','')
+    username=request.session.get('user','')
     guest_list=Guest.objects.all()
     return render(request,'guest_manage.html',{'user':username,'guests':guest_list})
+
+#guest搜索表单
+@login_required
+def search_realname(request):
+    username=request.session.get('user','')
+    search_name=request.GET.get('realname','')
+    guest_list=Guest.objects.filter(realname__contains=search_name)
+    return  render(request,'guest_manage.html',{'user':username,'guests':guest_list})
