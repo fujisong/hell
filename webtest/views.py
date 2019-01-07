@@ -4,6 +4,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from webtest.models import Event,Guest
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 # Create your views here.
 #登录逻辑
 def index(request):
@@ -15,6 +16,7 @@ def login_action(request):
         user=auth.authenticate(username=username,password=password)
         if user is not None:
             auth.login(request,user)
+
             response = HttpResponseRedirect('/event_manage/')
 #           response.set_cookie('user',username,3600)
             request.session['user']=username
@@ -46,7 +48,17 @@ def search_name(request):
 def guest_manage(request):
     username=request.session.get('user','')
     guest_list=Guest.objects.all()
-    return render(request,'guest_manage.html',{'user':username,'guests':guest_list})
+    paginator=Paginator(guest_list,2)
+    ww=request.GET.get('page')
+    try:
+        contacts= paginator.page(ww)
+    except PageNotAnInteger:
+        #如果page不是整数，取第一个页面的数据
+        contacts=paginator.page(1)
+    except EmptyPage:
+        #如果page不在范围，取最后一页面
+        contacts=paginator.page(paginator.num_pages)
+    return render(request,'guest_manage.html',{'user':username,'guests':contacts})
 
 #guest搜索表单
 @login_required
@@ -54,4 +66,4 @@ def search_realname(request):
     username=request.session.get('user','')
     search_name=request.GET.get('realname','')
     guest_list=Guest.objects.filter(realname__contains=search_name)
-    return  render(request,'guest_manage.html',{'user':username,'guests':guest_list})
+    return  render(request,'guest_manage.htm0',{'user':username,'guests':guest_list)
