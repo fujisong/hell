@@ -73,23 +73,35 @@ def search_realname(request):
 @login_required
 def sign_index(request,eid):
     event=get_object_or_404(Event,id=eid)
-    return render(request,'sign_index.html',{'events':event})
+    data1 = len(Guest.objects.all())
+    data2 = len(Guest.objects.filter(sign=1))
+    return render(request,'sign_index.html',{'events':event,'g_data':data1,'s_data':data2})
 
 #签到动作
 @login_required
 def sign_index_action(request,eid):
     event=get_object_or_404(Event,id=eid)
-    phone=request.GET.get('phone','')
+    phone=request.POST.get('phone','')
     print (phone)
     result=Guest.objects.filter(phone=phone)
+    data1=len(Guest.objects.all())
+    data2 = len(Guest.objects.filter(sign=1))
     if not result:
-        return render(request,'sign_index.html',{'event':event,'hint':'phone error'})
+        return render(request,'sign_index.html',{'events':event,'hint':'phone error','g_data':data1,'s_data':data2})
     result=Guest.objects.filter(phone=phone,event_id=eid)
     if not result:
-        return render(request,'sign_index.html',{'event':event,'hint':'event id or phone error'})
+        return render(request,'sign_index.html',{'events':event,'hint':'event id or phone error','g_data':data1,'s_data':data2})
     result=Guest.objects.get(phone=phone,event_id=eid)
     if result.sign:
-        return  render(request,'sign_index.html',{'event':event,'hint':"user has sign in"})
+        return  render(request,'sign_index.html',{'events':event,'hint':"user has sign in",'g_data':data1,'s_data':data2})
     else:
         Guest.objects.filter(phone=phone,event_id=eid).update(sign='1')
-        return render(request,'sign_index.html',{'event':event,'hint':'sign in success!','guest':result})
+        data2 = len(Guest.objects.filter(sign=1))
+        return render(request,'sign_index.html',{'events':event,'hint':'sign in success!','guest':result,'g_data':data1,'s_data':data2})
+
+#退出登录
+@login_required
+def logout(request):
+    auth.logout(request)
+    response=HttpResponseRedirect('/page/')
+    return  response
