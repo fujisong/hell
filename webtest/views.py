@@ -5,6 +5,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from webtest.models import Event,Guest
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from django.shortcuts import get_object_or_404
 # Create your views here.
 #登录逻辑
 def index(request):
